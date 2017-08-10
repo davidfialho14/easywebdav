@@ -19,11 +19,16 @@ pip-log.txt
 .coverage
 .tox
 
+# Folder with virtualenv
+.venv
+
 #### Eclipse
 *.pydevproject
 .project
 .metadata
 
+#### PyCharm
+.idea
 
 #### Emacs
 \#*\#
