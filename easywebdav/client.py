@@ -135,9 +135,6 @@ class Client(object):
             for dir in dirs:
                 try:
                     self.mkdir(dir, safe=True)
-                except Exception as e:
-                    if e.actual_code == 409:
-                        raise
                 finally:
                     self.cd(dir)
         finally:
