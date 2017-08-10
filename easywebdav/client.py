@@ -15,8 +15,10 @@ else:
 
 DOWNLOAD_CHUNK_SIZE_BYTES = 1 * 1024 * 1024
 
+
 class WebdavException(Exception):
     pass
+
 
 class ConnectionFailed(WebdavException):
     pass
@@ -46,13 +48,13 @@ def elem2file(elem):
 
 class OperationFailed(WebdavException):
     _OPERATIONS = dict(
-        HEAD = "get header",
-        GET = "download",
-        PUT = "upload",
-        DELETE = "delete",
-        MKCOL = "create directory",
-        PROPFIND = "list directory",
-        )
+        HEAD="get header",
+        GET="download",
+        PUT="upload",
+        DELETE="delete",
+        MKCOL="create directory",
+        PROPFIND="list directory",
+    )
 
     def __init__(self, method, path, expected_code, actual_code):
         self.method = method
@@ -61,8 +63,10 @@ class OperationFailed(WebdavException):
         self.actual_code = actual_code
         operation_name = self._OPERATIONS[method]
         self.reason = 'Failed to {operation_name} "{path}"'.format(**locals())
-        expected_codes = (expected_code,) if isinstance(expected_code, Number) else expected_code
-        expected_codes_str = ", ".join('{0} {1}'.format(code, codestr(code)) for code in expected_codes)
+        expected_codes = (expected_code,) if isinstance(expected_code,
+                                                        Number) else expected_code
+        expected_codes_str = ", ".join(
+            '{0} {1}'.format(code, codestr(code)) for code in expected_codes)
         actual_code_str = codestr(actual_code)
         msg = '''\
 {self.reason}.
@@ -70,6 +74,7 @@ class OperationFailed(WebdavException):
   Expected code :  {expected_codes_str}
   Actual code   :  {actual_code} {actual_code_str}'''.format(**locals())
         super(OperationFailed, self).__init__(msg)
+
 
 class Client(object):
     def __init__(self, host, port=0, auth=None, username=None, password=None,
@@ -94,10 +99,14 @@ class Client(object):
 
     def _send(self, method, path, expected_code, **kwargs):
         url = self._get_url(path)
-        response = self.session.request(method, url, allow_redirects=False, **kwargs)
-        if isinstance(expected_code, Number) and response.status_code != expected_code \
-            or not isinstance(expected_code, Number) and response.status_code not in expected_code:
-            raise OperationFailed(method, path, expected_code, response.status_code)
+        response = self.session.request(method, url, allow_redirects=False,
+                                        **kwargs)
+        if isinstance(expected_code,
+                      Number) and response.status_code != expected_code \
+                or not isinstance(expected_code,
+                                  Number) and response.status_code not in expected_code:
+            raise OperationFailed(method, path, expected_code,
+                                  response.status_code)
         return response
 
     def _get_url(self, path):
@@ -173,7 +182,8 @@ class Client(object):
 
     def ls(self, remote_path='.'):
         headers = {'Depth': '1'}
-        response = self._send('PROPFIND', remote_path, (207, 301), headers=headers)
+        response = self._send('PROPFIND', remote_path, (207, 301),
+                              headers=headers)
 
         # Redirect
         if response.status_code == 301:
