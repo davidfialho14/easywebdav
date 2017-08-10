@@ -1,17 +1,10 @@
-import requests
-import platform
-from numbers import Number
 import xml.etree.cElementTree as xml
 from collections import namedtuple
+from http.client import responses as HTTP_CODES
+from numbers import Number
+from urllib.parse import urlparse
 
-py_majversion, py_minversion, py_revversion = platform.python_version_tuple()
-
-if py_majversion == '2':
-    from httplib import responses as HTTP_CODES
-    from urlparse import urlparse
-else:
-    from http.client import responses as HTTP_CODES
-    from urllib.parse import urlparse
+import requests
 
 DOWNLOAD_CHUNK_SIZE_BYTES = 1 * 1024 * 1024
 
